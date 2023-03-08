@@ -1,0 +1,52 @@
+version: "3.3"
+
+services:
+
+  rocketchat:
+    container_name: rocketchat
+    image: rocket.chat:${RELEASE}
+    restart: unless-stopped
+    environment:
+      - PORT=3002
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+    ports:
+      - 3002:3002     
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    image: mongo:${MONGODB_RELEASE}
+    restart: unless-stopped
+    volumes:
+     - ./data/db:/data/db
+    command: mongod --oplogSize 128 --replSet rs0 
+    labels:
+      - "traefik.enable=false"
+ 
+  # this container's job is just run the command to initialize the replica set.
+  # it will run the command and remove himself (it will not stay running)
+  mongo-init-replica:
+    image: mongo:${MONGODB_RELEASE}
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+            msg=$$(mongosh mongo/rocketchat --quiet --eval \"
+            rs.initiate({
+              _id: 'rs0',
+              members: [ { _id: 0, host: 'mongo:27017' } ]})\" 2>&1)
+            s=$$?
+            if [ \"$$s\" -eq 0 ]; then
+              break
+            fi
+            if [[ \"$$msg\" == \"MongoServerError: already initialized\" ]] ; then
+              echo $$msg
+              break
+            fi
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit 0)"
+    depends_on:
+      - mongo
+
