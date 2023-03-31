@@ -10,7 +10,7 @@ services:
 
   rocketchat:
     container_name: rocketchat
-    image: rocket.chat:${RELEASE}
+    image: rocketchat/rocket.chat:${RELEASE}
     restart: unless-stopped
     networks:
       - letsencrypt
@@ -23,6 +23,7 @@ services:
         LETSENCRYPT_EMAIL: admin+rocket@over9k.com.br
         MONGO_URL: mongodb://mongo:27017/rocketchat
         MONGO_OPLOG_URL: mongodb://mongo:27017/local
+        CREATE_TOKENS_FOR_USERS: "true"
     ports:
       - 3002:3002
     depends_on:

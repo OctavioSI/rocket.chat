@@ -1,0 +1,33 @@
+{
+    "id": "019ea8ec-b09a-4ded-9d4f-71c0e41e3c9d",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.19.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "Octavio Ietsugu",
+        "homepage": "https://www.mevio.com.br",
+        "support": "https://www.mevio.com.br"
+    },
+    "name": "MevioRC App",
+    "nameSlug": "meviorc-app",
+    "classFile": "MevioRcApp.ts",
+    "description": "Extra funcionalities for Mevio RC Implementation",
+    "implements": [],
+    "permissions": [
+        {
+            "name": "slashcommand"
+        },
+        {
+            "name": "networking"
+        },
+        {
+            "name": "message.write"
+        },
+        {
+            "name": "ui.interact"
+        },
+        {
+            "name": "ui.registerButtons"
+        }
+    ]
+}
