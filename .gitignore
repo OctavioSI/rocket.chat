@@ -73,3 +73,5 @@ functions
 credentials/*
 
 data/
+
+meviorc-app/rocketdb/
